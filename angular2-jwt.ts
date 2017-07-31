@@ -46,7 +46,7 @@ const AuthConfigDefaults: IAuthConfig = {
     headerName: AuthConfigConsts.DEFAULT_HEADER_NAME,
     headerPrefix: null,
     tokenName: AuthConfigConsts.DEFAULT_TOKEN_NAME,
-    tokenGetter: () => localStorage.getItem(AuthConfigDefaults.tokenName) as string,
+    tokenGetter: () => localStorage.getItem(AuthConfigDefaults.tokenName) || sessionStorage.getItem(AuthConfigDefaults.tokenName) as string,
     noJwtError: false,
     noClientCheck: false,
     globalHeaders: [],
@@ -73,7 +73,7 @@ export class AuthConfig {
     }
 
     if (config.tokenName && !config.tokenGetter) {
-      this._config.tokenGetter = () => localStorage.getItem(config.tokenName) as string;
+      this._config.tokenGetter = () => localStorage.getItem(config.tokenName) || sessionStorage.getItem(AuthConfigDefaults.tokenName) as string;
     }
   }
 
@@ -302,7 +302,7 @@ export class JwtHelper {
  */
 export function tokenNotExpired(tokenName = AuthConfigConsts.DEFAULT_TOKEN_NAME, jwt?:string): boolean {
 
-  const token: string = jwt || localStorage.getItem(tokenName);
+  const token: string = jwt || localStorage.getItem(tokenName) || sessionStorage.getItem(tokenName);
 
   const jwtHelper = new JwtHelper();
 
